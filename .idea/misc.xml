@@ -6,10 +6,15 @@
       <list>
         <option value="$PROJECT_DIR$/ms.cursos/pom.xml" />
         <option value="$PROJECT_DIR$/ms.alumnos/pom.xml" />
-        <option value="$PROJECT_DIR$/ms.producto/pom.xml" />
-        <option value="$PROJECT_DIR$/ms.cliente/pom.xml" />
-        <option value="$PROJECT_DIR$/ms.ventas/pom.xml" />
         <option value="$PROJECT_DIR$/api.gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-usuarios/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-libros/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-prestamos/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-reservas/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-multas/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-lib-notificaciones/pom.xml" />
         <option value="$PROJECT_DIR$/ms.auth/pom.xml" />
       </list>
     </option>

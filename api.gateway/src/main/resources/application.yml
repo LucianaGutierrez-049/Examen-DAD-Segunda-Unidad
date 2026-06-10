@@ -1,45 +1,61 @@
 server:
   port: 8030
-
 spring:
   application:
     name: api-gateway
-
+  config:
+    import: optional:configserver:http://config-server:8888
   cloud:
-
-    consul:
-      host: consul-examen
-      port: 8500
-      discovery:
-        enabled: true
-
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       routes:
-
-        - id: producto
-          uri: lb://ms-producto
+        - id: usuarios
+          uri: lb://ms-lib-usuarios
           predicates:
-            - Path=/api/productos/**
+            - Path=/api/usuarios/**
           filters:
             - StripPrefix=1
-
-        - id: cliente
-          uri: lb://ms-cliente
+        - id: libros
+          uri: lb://ms-lib-libros
           predicates:
-            - Path=/api/clientes/**
+            - Path=/api/libros/**,/api/categorias/**,/api/autores/**
           filters:
             - StripPrefix=1
-
-        - id: auth
-          uri: lb://ms-auth
+        - id: prestamos
+          uri: lb://ms-lib-prestamos
           predicates:
-            - Path=/api/auth/**
+            - Path=/api/prestamos/**
           filters:
             - StripPrefix=1
-
-        - id: ventas
-          uri: lb://ms-ventas
+        - id: reservas
+          uri: lb://ms-lib-reservas
           predicates:
-            - Path=/api/ventas/**
+            - Path=/api/reservas/**
           filters:
             - StripPrefix=1
+        - id: multas
+          uri: lb://ms-lib-multas
+          predicates:
+            - Path=/api/multas/**
+          filters:
+            - StripPrefix=1
+        - id: notificaciones
+          uri: lb://ms-lib-notificaciones
+          predicates:
+            - Path=/api/notificaciones/**
+          filters:
+            - StripPrefix=1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

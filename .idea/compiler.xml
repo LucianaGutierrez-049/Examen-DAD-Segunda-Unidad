@@ -7,27 +7,40 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ms.ventas" />
         <module name="api.gateway-v1" />
+        <module name="config-server" />
+        <module name="ms-lib-libros" />
+        <module name="ms-lib-multas" />
+        <module name="ms-lib-usuarios" />
+        <module name="ms-lib-notificaciones" />
         <module name="api.gateway" />
-        <module name="ms.producto" />
-        <module name="ms.cliente" />
+        <module name="eureka-server" />
+        <module name="ms-lib-reservas" />
+        <module name="ms-lib-prestamos" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ms.alumnos" target="21" />
       <module name="ms.auth" target="21" />
+      <module name="ms.cliente" target="21" />
+      <module name="ms.producto" target="21" />
+      <module name="ms.ventas" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api.gateway" options="-parameters" />
       <module name="api.gateway-v1" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="ms-lib-libros" options="-parameters" />
+      <module name="ms-lib-multas" options="-parameters" />
+      <module name="ms-lib-notificaciones" options="-parameters" />
+      <module name="ms-lib-prestamos" options="-parameters" />
+      <module name="ms-lib-reservas" options="-parameters" />
+      <module name="ms-lib-usuarios" options="-parameters" />
       <module name="ms.alumnos" options="-parameters" />
       <module name="ms.auth" options="-parameters" />
-      <module name="ms.cliente" options="-parameters" />
-      <module name="ms.producto" options="-parameters" />
-      <module name="ms.ventas" options="-parameters" />
     </option>
   </component>
 </project>
