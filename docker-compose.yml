@@ -1,0 +1,109 @@
+services:
+
+  consul-examen:
+    image: hashicorp/consul:latest
+    container_name: examen-consul
+    ports:
+      - "8510:8500"
+    command: agent -dev -client=0.0.0.0
+
+  mysql-examen:
+    image: mysql:8.0
+    container_name: examen-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql123
+      MYSQL_DATABASE: cliente
+    ports:
+      - "3310:3306"
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  ms-producto:
+    build: ./ms.producto
+    container_name: examen-ms-producto
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./central-config:/app/central-config
+    depends_on:
+      - mysql-examen
+      - consul-examen
+
+  ms-producto-2:
+    build: ./ms.producto
+    container_name: examen-ms-producto-2
+    ports:
+      - "8095:8080"
+    volumes:
+      - ./central-config:/app/central-config
+    depends_on:
+      - mysql-examen
+      - consul-examen
+
+  ms-cliente:
+    build: ./ms.cliente
+    container_name: examen-ms-cliente
+    ports:
+      - "8092:8082"
+    volumes:
+      - ./central-config:/app/central-config
+    depends_on:
+      - mysql-examen
+      - consul-examen
+
+  ms-ventas:
+    build: ./ms.ventas
+    container_name: examen-ms-ventas
+    ports:
+      - "8093:8083"
+    volumes:
+      - ./central-config:/app/central-config
+    depends_on:
+      - mysql-examen
+      - ms-producto
+      - ms-cliente
+      - consul-examen
+
+  api-gateway:
+    build: ./api.gateway
+    container_name: examen-api-gateway
+    ports:
+      - "8040:8030"
+    depends_on:
+      - consul-examen
+      - ms-producto
+      - ms-producto-2
+      - ms-cliente
+      - ms-ventas
+
+  consul-registrator:
+    image: curlimages/curl:latest
+    container_name: examen-consul-registrator
+    depends_on:
+      - consul-examen
+      - ms-producto
+      - ms-producto-2
+      - ms-cliente
+      - ms-ventas
+    entrypoint: >
+      sh -c "
+      sleep 40 &&
+
+      curl -X PUT http://consul-examen:8500/v1/agent/service/register
+      -H 'Content-Type: application/json'
+      -d '{\"Name\":\"ms-producto\",\"ID\":\"ms-producto-1\",\"Address\":\"ms-producto\",\"Port\":8080,\"Check\":{\"HTTP\":\"http://ms-producto:8080/q/health\",\"Interval\":\"10s\"}}' &&
+
+      curl -X PUT http://consul-examen:8500/v1/agent/service/register
+      -H 'Content-Type: application/json'
+      -d '{\"Name\":\"ms-producto\",\"ID\":\"ms-producto-2\",\"Address\":\"ms-producto-2\",\"Port\":8080,\"Check\":{\"HTTP\":\"http://ms-producto-2:8080/q/health\",\"Interval\":\"10s\"}}' &&
+
+      curl -X PUT http://consul-examen:8500/v1/agent/service/register
+      -H 'Content-Type: application/json'
+      -d '{\"Name\":\"ms-cliente\",\"ID\":\"ms-cliente-1\",\"Address\":\"ms-cliente\",\"Port\":8082,\"Check\":{\"HTTP\":\"http://ms-cliente:8082/q/health\",\"Interval\":\"10s\"}}' &&
+
+      curl -X PUT http://consul-examen:8500/v1/agent/service/register
+      -H 'Content-Type: application/json'
+      -d '{\"Name\":\"ms-ventas\",\"ID\":\"ms-ventas-1\",\"Address\":\"ms-ventas\",\"Port\":8083,\"Check\":{\"HTTP\":\"http://ms-ventas:8083/q/health\",\"Interval\":\"10s\"}}' &&
+
+      echo 'Servicios registrados en Consul correctamente'
+      "
